@@ -13,7 +13,25 @@ app.get('/', function(req, res){
     res.send('Welcome to our Products API. Use endpoints to filter out the data');
 });
 
+app.get('/allProducts', function(req,res){
+    res.send(allProducts);
+});
 
+app.get('/product/:id', function(req,res){
+    const id = req.params.id;
+    let filteredData = [];
+    for (var i = 0; i < allProducts.length; i++) {
+      if (allProducts[i].id.toString()===id) {
+          filteredData.push(allProducts[i]);
+          console.log(filteredData[0]);
+      }
+    }
+    res.send(filteredData[0])
+});
+
+app.get('/product/delete/:id',function(req,res){
+
+});
 
 app.listen(port, () => {
     console.clear();
