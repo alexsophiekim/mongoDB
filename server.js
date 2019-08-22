@@ -3,6 +3,18 @@ const app = express();
 const port = 3000;
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const mongoose = require('mongoose');
+
+const config = require('./config.json');
+
+mongoose.connect(`mongodb+srv://sophiekim:${config.MONGO_PASSWORD}@sophiecluster-lhxyp.mongodb.net/test?retryWrites=true&w=majority`, {useNewUrlParser: true});
+
+const db = mongoose.connection;
+  db.on('error', console.error.bind(console, 'connection error:'));
+  db.once('open', function() {
+    console.log("we're connected!");
+});
+
 
 const allProducts = require('./data/products');
 
@@ -41,7 +53,7 @@ app.post('/product',function(req,res){
       message: 'We are about to send this product to a database'
   }
   res.send(product);
-})
+});
 
 
 
