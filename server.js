@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 
 const config = require('./config.json');
 
-mongoose.connect(`mongodb+srv://sophiekim:${config.MONGO_PASSWORD}@sophiecluster-lhxyp.mongodb.net/test?retryWrites=true&w=majority`, {useNewUrlParser: true});
+mongoose.connect(`mongodb+srv://sophiekim:${config.MONGO_PASSWORD}@sophiecluster-lhxyp.mongodb.net/shop?retryWrites=true&w=majority`, {useNewUrlParser: true});
 
 const db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
@@ -45,21 +45,42 @@ app.get('/product/:id', function(req,res){
     }
 });
 
+const Product = require('./models/products');
+
 app.post('/product',function(req,res){
-  console.log(req.body);
-  let product = {
-      name: req.body.name,
-      price: req.body.price,
-      message: 'We are about to send this product to a database'
-  }
-  res.send(product);
+  // console.log(req.body);
+  // let product = {
+  //     name: req.body.name,
+  //     price: req.body.price,
+  //     message: 'We are about to send this product to a database'
+  // };
+  // res.send(product);
+
+  const product = new Product({
+    _id: new mongoose.Types.ObjectId(),
+    name: req.body.name,
+    price: req.body.price
+  });
+  console.log(product);
+  product.save().then(result => {
+      res.send(result)
+  }).catch(err => res.send(err));
 });
 
 
+const Message = require('./models/messages');
 
-
-
-
+app.post('/message',function(req,res){
+  const message = new Message({
+    name: req.body.name,
+    email: req.body.email,
+    message: req.body.message
+  });
+  console.log(message);
+  message.save().then(result =>{
+    res.send(result)
+  }).catch(err => res.send(err));
+});
 
 
 app.listen(port, () => {
