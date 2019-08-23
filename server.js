@@ -4,11 +4,9 @@ const port = 3000;
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
-
 const config = require('./config.json');
 
 mongoose.connect(`mongodb+srv://sophiekim:${config.MONGO_PASSWORD}@sophiecluster-lhxyp.mongodb.net/shop?retryWrites=true&w=majority`, {useNewUrlParser: true});
-mongoose.connect(`mongodb+srv://sophiekim:${config.MONGO_PASSWORD}@sophiecluster-lhxyp.mongodb.net/contact?retryWrites=true&w=majority`, {useNewUrlParser: true});
 
 const db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
@@ -45,7 +43,7 @@ app.get('/product/:id', function(req,res){
     }
 });
 
-<<<<<<< HEAD
+
 app.get('/product/name=:name',function(req,res){
   const name = req.params.name;
   let filteredData = [];
@@ -58,9 +56,9 @@ app.get('/product/name=:name',function(req,res){
   }
   res.send(filteredData[0]);
 })
-=======
+
 const Product = require('./models/products');
->>>>>>> e6699f785fb311551f26c4629e06406d69abbc49
+
 
 app.post('/product',function(req,res){
 
