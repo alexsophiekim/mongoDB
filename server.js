@@ -1,8 +1,26 @@
 const express = require('express');
 const app = express();
 const port = 3000;
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const mongoose = require('mongoose');
+
+const config = require('./config.json');
+
+mongoose.connect(`mongodb+srv://sophiekim:${config.MONGO_PASSWORD}@sophiecluster-lhxyp.mongodb.net/shop?retryWrites=true&w=majority`, {useNewUrlParser: true});
+mongoose.connect(`mongodb+srv://sophiekim:${config.MONGO_PASSWORD}@sophiecluster-lhxyp.mongodb.net/contact?retryWrites=true&w=majority`, {useNewUrlParser: true});
+
+const db = mongoose.connection;
+  db.on('error', console.error.bind(console, 'connection error:'));
+  db.once('open', function() {
+    console.log("we're connected!");
+});
 
 const allProducts = require('./data/products');
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}));
+app.use(cors());
 
 app.use(function(req, res, next){
     console.log(`${req.method} request for ${req.url}`);
@@ -19,16 +37,15 @@ app.get('/allProducts', function(req,res){
 
 app.get('/product/:id', function(req,res){
     const id = req.params.id;
-    let filteredData = [];
     for (var i = 0; i < allProducts.length; i++) {
-      if (allProducts[i].id.toString()===id) {
-          filteredData.push(allProducts[i]);
-          console.log(filteredData[0]);
+      if (allProducts[i].id.toString()==id) {
+          res.send(allProducts[i])
+          break;
       }
     }
-    res.send(filteredData[0])
 });
 
+<<<<<<< HEAD
 app.get('/product/name=:name',function(req,res){
   const name = req.params.name;
   let filteredData = [];
@@ -41,14 +58,38 @@ app.get('/product/name=:name',function(req,res){
   }
   res.send(filteredData[0]);
 })
+=======
+const Product = require('./models/products');
+>>>>>>> e6699f785fb311551f26c4629e06406d69abbc49
 
-app.get('/product/edit:id',function(req,res){
+app.post('/product',function(req,res){
 
+  const product = new Product({
+    _id: new mongoose.Types.ObjectId(),
+    name: req.body.name,
+    price: req.body.price
+  });
+  console.log(product);
+  product.save().then(result => {
+      res.send(result)
+  }).catch(err => res.send(err));
 });
 
-app.get('/product/delete/:id',function(req,res){
 
+const Message = require('./models/message');
+
+app.post('/message',function(req,res){
+  const message = new Message({
+    name: req.body.name,
+    email: req.body.email,
+    message: req.body.message
+  });
+  console.log(message);
+  message.save().then(result =>{
+    res.send(result)
+  }).catch(err => res.send(err));
 });
+
 app.listen(port, () => {
     console.clear();
     console.log(`application is running on port ${port}`)
