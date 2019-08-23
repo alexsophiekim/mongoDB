@@ -34,7 +34,7 @@ app.get('/product/name=:name',function(req,res){
   let filteredData = [];
   for (var i = 0; i < allProducts.length; i++) {
     for (var j = 0; j < name.length; i++) {
-      if (name.toString() == inputName) {
+      if (name.toString() < inputName) {
         console.log(name);
       }
     }
