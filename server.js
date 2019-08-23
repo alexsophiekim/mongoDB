@@ -8,13 +8,13 @@ const mongoose = require('mongoose');
 const config = require('./config.json');
 
 mongoose.connect(`mongodb+srv://sophiekim:${config.MONGO_PASSWORD}@sophiecluster-lhxyp.mongodb.net/shop?retryWrites=true&w=majority`, {useNewUrlParser: true});
+mongoose.connect(`mongodb+srv://sophiekim:${config.MONGO_PASSWORD}@sophiecluster-lhxyp.mongodb.net/contact?retryWrites=true&w=majority`, {useNewUrlParser: true});
 
 const db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
   db.once('open', function() {
     console.log("we're connected!");
 });
-
 
 const allProducts = require('./data/products');
 
@@ -48,13 +48,6 @@ app.get('/product/:id', function(req,res){
 const Product = require('./models/products');
 
 app.post('/product',function(req,res){
-  // console.log(req.body);
-  // let product = {
-  //     name: req.body.name,
-  //     price: req.body.price,
-  //     message: 'We are about to send this product to a database'
-  // };
-  // res.send(product);
 
   const product = new Product({
     _id: new mongoose.Types.ObjectId(),
@@ -68,7 +61,7 @@ app.post('/product',function(req,res){
 });
 
 
-const Message = require('./models/messages');
+const Message = require('./models/message');
 
 app.post('/message',function(req,res){
   const message = new Message({
@@ -81,7 +74,6 @@ app.post('/message',function(req,res){
     res.send(result)
   }).catch(err => res.send(err));
 });
-
 
 app.listen(port, () => {
     console.clear();
