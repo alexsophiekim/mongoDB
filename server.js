@@ -6,12 +6,12 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const config = require('./config.json');
 
-mongoose.connect(`mongodb+srv://sophiekim:${config.MONGO_PASSWORD}@sophiecluster-lhxyp.mongodb.net/shop?retryWrites=true&w=majority`, {useNewUrlParser: true});
+mongoose.connect(`mongodb+srv://${config.MONGO_USER}:${config.MONGO_PASSWORD}@sophiecluster-lhxyp.mongodb.net/shop?retryWrites=true&w=majority`, {useNewUrlParser: true});
 
 const db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
   db.once('open', function() {
-    console.log("we're connected!");
+    console.log("we're connected!")
 });
 
 const allProducts = require('./data/products');
@@ -43,7 +43,6 @@ app.get('/product/:id', function(req,res){
     }
 });
 
-
 app.get('/product/name=:name',function(req,res){
   const name = req.params.name;
   let filteredData = [];
@@ -70,9 +69,8 @@ app.post('/product',function(req,res){
   console.log(product);
   product.save().then(result => {
       res.send(result)
-  }).catch(err => res.send(err));
+  }).catch(err => res.send(err))
 });
-
 
 const Message = require('./models/message');
 
@@ -85,7 +83,7 @@ app.post('/message',function(req,res){
   console.log(message);
   message.save().then(result =>{
     res.send(result)
-  }).catch(err => res.send(err));
+  }).catch(err => res.send(err))
 });
 
 app.listen(port, () => {
