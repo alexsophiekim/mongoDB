@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const config = require('./config.json');
+const Product = require('./models/products');
 
 mongoose.connect(`mongodb+srv://${config.MONGO_USER}:${config.MONGO_PASSWORD}@sophiecluster-lhxyp.mongodb.net/shop?retryWrites=true&w=majority`, {useNewUrlParser: true});
 
@@ -30,17 +31,23 @@ app.get('/', function(req, res){
 });
 
 app.get('/allProducts', function(req,res){
-    res.send(allProducts);
+    // res.send(allProducts);
+    Product.find().then(result => {
+      res.send(result);
+    });
 });
 
 app.get('/product/:id', function(req,res){
     const id = req.params.id;
-    for (var i = 0; i < allProducts.length; i++) {
-      if (allProducts[i].id.toString()==id) {
-          res.send(allProducts[i])
-          break;
-      }
-    }
+    // for (var i = 0; i < allProducts.length; i++) {
+    //   if (allProducts[i].id.toString()==id) {
+    //       res.send(allProducts[i])
+    //       break;
+    //   }
+    // }
+    Product.findById(id).then(result => {
+      res.send(result);
+    });
 });
 
 app.get('/product/name=:name',function(req,res){
@@ -55,9 +62,6 @@ app.get('/product/name=:name',function(req,res){
   }
   res.send(filteredData[0]);
 })
-
-const Product = require('./models/products');
-
 
 app.post('/product',function(req,res){
 
@@ -88,5 +92,5 @@ app.post('/message',function(req,res){
 
 app.listen(port, () => {
     console.clear();
-    console.log(`application is running on port ${port}`)
+    console.log(`application is running on port ${port}`);
 });
