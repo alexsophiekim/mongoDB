@@ -27,7 +27,7 @@ app.use(function(req, res, next){
 });
 
 app.get('/', function(req, res){
-    res.send('Welcome to our Products API. Use endpoints to filter out the data');
+    res.send('dfadsfWelcome to our Products API. Use endpoints to filter out the data');
 });
 
 app.get('/allProducts', function(req,res){
@@ -75,6 +75,19 @@ app.post('/product',function(req,res){
       res.send(result)
   }).catch(err => res.send(err))
 });
+
+ app.patch('/editProduct/:id', function(req,res){
+   const id = req.params.id;
+   const newProduct = {
+     name: req.body.name,
+     price: req.body.price
+   }
+   Product.updateOne({_id: id}, newProduct).then(result =>{
+     res.send(result);
+   }).catch(err => res.send(err));
+ })
+
+
 
 const Message = require('./models/message');
 
