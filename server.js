@@ -87,7 +87,12 @@ app.post('/product',function(req,res){
    }).catch(err => res.send(err));
  })
 
-
+app.delete('/products/:id',function(req,res){
+  const id = req.params.id;
+  Product.deleteOne({ _id: id }, function (err) {
+    res.send('deleted')
+  });
+});
 
 const Message = require('./models/message');
 
