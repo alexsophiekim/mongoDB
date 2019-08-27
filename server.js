@@ -87,6 +87,7 @@ app.post('/product',function(req,res){
    }).catch(err => res.send(err));
  })
 
+<<<<<<< HEAD
 app.patch('/deleteProduct/:id',function(req,res){
   const id = req.params.id;
   const delProduct ={
@@ -98,6 +99,14 @@ app.patch('/deleteProduct/:id',function(req,res){
   }).catch(err => res.send(err));
 })
 
+=======
+app.delete('/products/:id',function(req,res){
+  const id = req.params.id;
+  Product.deleteOne({ _id: id }, function (err) {
+    res.send('deleted')
+  });
+});
+>>>>>>> 7feb6ea6f27ede6935e62eef36ba77530c4df388
 
 const Message = require('./models/message');
 
