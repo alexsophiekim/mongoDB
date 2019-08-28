@@ -4,8 +4,10 @@ const port = 3000;
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const config = require('./config.json');
 const Product = require('./models/products');
+const User = require('./models/users');
 
 mongoose.connect(`mongodb+srv://${config.MONGO_USER}:${config.MONGO_PASSWORD}@sophiecluster-lhxyp.mongodb.net/shop?retryWrites=true&w=majority`, {useNewUrlParser: true});
 
@@ -76,6 +78,32 @@ app.post('/product',function(req,res){
   }).catch(err => res.send(err))
 });
 
+
+app.post('/users',function(req,res){
+  const hash = bcrypt.hashSync(req.body.password);
+  console.log(hash);
+  const user = new User({
+    _id: new mongoose.Types.ObjectId(),
+    username: req.body.username,
+    email: req.body.email,
+    password: hash
+  });
+  console.log(user);
+  user.save().then(result => {
+    res.send(result)
+  }).catch(err => res.send(err))
+});
+
+app.post('/getuser', function(req,res){
+  // if (bcrypt.compareSync('password',hash)) {
+  //     console.log('password matches');
+  // } else {
+  //     console.log('password does not match');
+  // }
+})
+
+
+
  app.patch('/editProduct/:id', function(req,res){
    const id = req.params.id;
    const newProduct = {
@@ -107,6 +135,9 @@ app.post('/message',function(req,res){
     res.send(result)
   }).catch(err => res.send(err))
 });
+
+
+
 
 app.listen(port, () => {
     console.clear();
