@@ -115,13 +115,23 @@ app.post('/getuser', function(req,res){
    }).catch(err => res.send(err));
  })
 
+app.patch('/deleteProduct/:id',function(req,res){
+  const id = req.params.id;
+  const delProduct ={
+    name: req.body.name,
+    price: req.body.price
+  }
+  Product.deleteOne({_id: id}, delProduct).then(result =>{
+    res.send(result);
+  }).catch(err => res.send(err));
+})
+
 app.delete('/products/:id',function(req,res){
   const id = req.params.id;
   Product.deleteOne({ _id: id }, function (err) {
     res.send('deleted')
   });
 });
-
 const Message = require('./models/message');
 
 app.post('/message',function(req,res){
