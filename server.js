@@ -80,18 +80,24 @@ app.post('/product',function(req,res){
 
 
 app.post('/users',function(req,res){
-  const hash = bcrypt.hashSync(req.body.password);
-  console.log(hash);
-  const user = new User({
-    _id: new mongoose.Types.ObjectId(),
-    username: req.body.username,
-    email: req.body.email,
-    password: hash
+  // User - modal, findOne - function, result is result of findOne().
+  User.findOne({ username: req.body.username }, function (err, result) {
+    if (result) {
+      res.send('Sorry, this username is already existed');
+    } else {
+      const hash = bcrypt.hashSync(req.body.password);
+      // console.log(hash);
+      const user = new User({
+        _id: new mongoose.Types.ObjectId(),
+        username: req.body.username,
+        email: req.body.email,
+        password: hash
+      });
+      user.save().then(result => {
+        res.send(result)
+      }).catch(err => res.send(err))
+    }
   });
-  console.log(user);
-  user.save().then(result => {
-    res.send(result)
-  }).catch(err => res.send(err))
 });
 
 app.post('/getuser', function(req,res){
@@ -100,8 +106,7 @@ app.post('/getuser', function(req,res){
   // } else {
   //     console.log('password does not match');
   // }
-})
-
+});
 
 
  app.patch('/editProduct/:id', function(req,res){
@@ -115,16 +120,6 @@ app.post('/getuser', function(req,res){
    }).catch(err => res.send(err));
  })
 
-app.patch('/deleteProduct/:id',function(req,res){
-  const id = req.params.id;
-  const delProduct ={
-    name: req.body.name,
-    price: req.body.price
-  }
-  Product.deleteOne({_id: id}, delProduct).then(result =>{
-    res.send(result);
-  }).catch(err => res.send(err));
-})
 
 app.delete('/products/:id',function(req,res){
   const id = req.params.id;
@@ -145,8 +140,6 @@ app.post('/message',function(req,res){
     res.send(result)
   }).catch(err => res.send(err))
 });
-
-
 
 
 app.listen(port, () => {
