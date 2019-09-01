@@ -50,7 +50,7 @@ app.get('/allProducts', function(req,res){
       res.send(result);
     });
 });
-
+//
 app.get('/product/:id', function(req,res){
     const id = req.params.id;
     Product.findById(id).then(result => {
