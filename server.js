@@ -36,7 +36,8 @@ app.post('/product',function(req,res){
   const product = new Product({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
-    price: req.body.price
+    price: req.body.price,
+    user_id : req.body.userId
   });
   console.log(product);
   product.save().then(result => {
@@ -51,23 +52,33 @@ app.get('/allProducts', function(req,res){
     });
 });
 //
-app.get('/product/:id', function(req,res){
+app.post('/product/:id', function(req,res){
     const id = req.params.id;
-    Product.findById(id).then(result => {
-      res.send(result);
+    Product.findById(id, function(err, product){
+        if (product['user_id'] == req.body.userId) {
+            res.send(product);
+        } else {
+            res.send('401')
+        }
     });
 });
 
 app.patch('/editProduct/:id', function(req,res){
    const id = req.params.id;
-   const newProduct = {
-     name: req.body.name,
-     price: req.body.price
-   }
-   Product.updateOne({_id: id}, newProduct).then(result =>{
-     res.send(result);
-   }).catch(err => res.send(err));
-})
+   Product.findById(id, function(err,product){
+      if (product['user_id'] == req.body.userId) {
+        const newProduct = {
+          name: req.body.name,
+          price: req.body.price
+        }
+        Product.updateOne({_id: id}, newProduct).then(result =>{
+          res.send(result);
+        }).catch(err => res.send(err));
+      } else {
+        res.send('401');
+      }
+   }).catch(err=> res.send('cannot find product with that id'));
+});
 
 app.delete('/products/:id',function(req,res){
    const id = req.params.id;
